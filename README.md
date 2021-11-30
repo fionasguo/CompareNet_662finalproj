@@ -1,4 +1,4 @@
-**Work to reproduce**:
+# Work to reproduce
 
 the ACL 2021 paper "[Compare to The Knowledge: Graph Neural Fake News Detection with External Knowledge](https://aclanthology.org/2021.acl-long.62/)"
 
