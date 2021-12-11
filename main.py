@@ -60,7 +60,7 @@ def parse_arguments():
     # parser.add_argument("--cuda", type=bool, default=True, help='use gpu to speed up or not')
     parser.add_argument("--cuda", type=bool, default=True, help='use gpu to speed up or not')
     parser.add_argument("--device", type=int, default=0, help='GPU ID. ')
-    parser.add_argument("--HALF", type=bool, default=True, help='Use half tensor to save memory')
+    parser.add_argument("--HALF", type=int, default=1, help='Use half tensor to save memory')
 
     parser.add_argument("--DEBUG", action='store_true', default=False, help='')
     parser.add_argument("--node_type", type=int, default=3,
@@ -69,7 +69,8 @@ def parse_arguments():
                              '1 represents two types: Document&Topic; \n'
                              '0 represents only one type: Document. ')
     parser.add_argument('-r', "--repeat", type=int, default=1, help='')
-    parser.add_argument('-s', "--seed", type=list, default=[5], help='')
+    parser.add_argument('-s', "--seed", nargs='+', type=int, default=[5], help='command line pass in example: -s 1 2 3')
+    parser.add_argument("--bert_encoder", type=int, default=0, help='whether to use pretrained sentence-bert for encoding docs and entity descriptions. Default=0')
 
     for dir in ["models/", "ckpt/", "plots/", "result/", "log/"]:
         if not os.path.exists(dir):   os.makedirs(dir)
@@ -138,6 +139,6 @@ def set_seed(seed=9699):
 if __name__ == '__main__':
 
     params = parse_arguments()
+    print(type(params.hidden_dim),params.hidden_dim)
     set_seed(0)
     main(params)
-

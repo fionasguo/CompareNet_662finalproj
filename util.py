@@ -1,6 +1,6 @@
 from timeit import default_timer as timer
 import numpy as np
-from tqdm import tqdm
+from tqdm import tqdm,trange
 from models import Classifier
 import torch
 import torch.nn as nn
@@ -90,41 +90,43 @@ class Utils:
         patience = 0
         outOfMemory = 0
         # Start the training loop
-        for epoch in range(1, self.params.max_epochs + 1):
+        trange_epoch = trange(1, self.params.max_epochs + 1,desc='Run time',leave=True)
+        for epoch in trange_epoch:
+            # trange_epoch.set_description("Run time (Epoch %i)" % epoch, refresh=True)
             model.train()
             train_loss, hits, total = 0, 0, 0
             # train_data_loader = self.data_loader.train_data_loader \
             #                     if not self.params.DEBUG else self.data_loader.test2_data_loader
-            for inputs in tqdm(self.data_loader.train_data_loader):
+            for inputs in tqdm(self.data_loader.train_data_loader, desc='Training batch'):
                 # torch.cuda.empty_cache()
-                try:
-                    documents, ent_desc, doc_lens, ent_lens, y_batch, adj_lists, feature_lists, sentPerDoc, entiPerDoc = \
-                                                        [self.to_gpu(i, self.params.cuda and torch.cuda.is_available()) for i in inputs]
-                    total += sentPerDoc.shape[0]
-                    logits = model(documents, ent_desc, doc_lens, ent_lens, adj_lists, feature_lists, sentPerDoc, entiPerDoc)
-                    if torch.isnan(logits).any():
-                        print('stop here')
-                        # model(documents, ent_desc, doc_lens, ent_lens, adj_lists, feature_lists, sentPerDoc, entiPerDoc)
-                    loss = loss_fn(logits, y_batch)
-                    # Book keeping
-                    train_loss += loss.item()
-                    hits += torch.sum(torch.argmax(logits, dim=1) == y_batch).item()
-                    # Back-prop
-                    optimizer.zero_grad()  # Reset the gradients
-                    loss.backward()  # Back propagate the gradients
-                    optimizer.step()  # Update the network
+                #try:
+                documents, ent_desc, doc_lens, ent_lens, y_batch, adj_lists, feature_lists, sentPerDoc, entiPerDoc = \
+                                                    [self.to_gpu(i, self.params.cuda and torch.cuda.is_available()) for i in inputs]
+                total += sentPerDoc.shape[0]
+                logits = model(documents, ent_desc, doc_lens, ent_lens, adj_lists, feature_lists, sentPerDoc, entiPerDoc)
+                if torch.isnan(logits).any():
+                    print('stop here')
+                    # model(documents, ent_desc, doc_lens, ent_lens, adj_lists, feature_lists, sentPerDoc, entiPerDoc)
+                loss = loss_fn(logits, y_batch)
+                # Book keeping
+                train_loss += loss.item()
+                hits += torch.sum(torch.argmax(logits, dim=1) == y_batch).item()
+                # Back-prop
+                optimizer.zero_grad()  # Reset the gradients
+                loss.backward()  # Back propagate the gradients
+                optimizer.step()  # Update the network
 
-                except RuntimeError as e:
-                    if 'out of memory' in str(e).lower():
-                        outOfMemory += 1
-                        continue
-                    else:
-                        print(e)
-                        exit()
-                except Exception as e:
-                    print(e)
-                    exit()
-            print("Times of out of memory: ", outOfMemory)
+                #except RuntimeError as e:
+                #    if 'out of memory' in str(e).lower():
+                #        outOfMemory += 1
+                #        continue
+                #    else:
+                #        print(e)
+                #        exit()
+                #except Exception as e:
+                #    print(e)
+                #    exit()
+            #print("Times of out of memory: ", outOfMemory)
             # Compute loss and acc for dev set
             dev_loss, dev_acc = self.get_dev_loss_and_acc(model, loss_fn)
             train_loss = train_loss / len(self.data_loader.train_data_loader)

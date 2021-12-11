@@ -10,6 +10,10 @@ from sklearn.model_selection import train_test_split
 from nltk import sent_tokenize, word_tokenize
 from multiprocessing import Pool as ProcessPool
 
+from transformers import AutoTokenizer, AutoModel
+sentence_model = 'sentence-transformers/all-MiniLM-L6-v2'
+bert_tokenizer = AutoTokenizer.from_pretrained(sentence_model,local_files_only=True)
+
 ASYMMETRIC = True
 DEBUG_NUM = 400
 W2I = None
@@ -34,6 +38,22 @@ def parseLine(args):
         curr_sentence_idx = [W2I[x] for x in sentence]
         sentences_idx.append(curr_sentence_idx if len(curr_sentence_idx) > 0 else [W2I['<unk>']])
     return int(tag), sentences_idx
+
+################ added by Fiona Guo ################
+def bert_tokenizer(text,max_length=50,tokenizer=bert_tokenizer):
+    inputs = tokenizer.batch_encode_plus(
+            text,
+            add_special_tokens=True,
+            max_length=max_length,
+            padding="max_length",
+            return_token_type_ids=True,
+            truncation=True)
+    ids = inputs['input_ids']
+    mask = inputs['attention_mask']
+
+    ids,mask = torch.tensor(ids, dtype=torch.long),torch.tensor(mask, dtype=torch.long)
+    return ids, mask
+################################################
 
 class DataLoader:
     def __init__(self, params):
@@ -76,9 +96,13 @@ class DataLoader:
 
         with open(params.entity_desc, 'rb') as f:
             corpus = pkl.load(f)
-        self.entity_description = []
-        for row in corpus:
-            self.entity_description.append([w2i[x] for x in row.lower().split(" ")])
+        if params.bert_encoder:
+            self.entity_description = bert_tokenizer(corpus,max_length=params.max_sent_len)
+        else:
+            self.entity_description = []
+            for row in corpus:
+                self.entity_description.append([w2i[x] for x in row.lower().split(" ")])
+
 
         if params.mode == 0:
             dataset_train = DataSet(self.train, self.adj_train, self.fea_train, self.params, self.entity_description)
@@ -188,12 +212,16 @@ class DataLoader:
                         tag = tag - 1 if tag == 1 else tag - 3   # Adjust the tag to {0: Satire, 1: Trusted}
                     else:
                         tag -= 1                                 # {0: Satire, 1: Hoax, 2: Propaganda, 3: Trusted}
-                    sentences_idx = []
-                    for sentence in sentences:
-                        sentence = sentence.lower().strip().split(" ")
-                        curr_sentence_idx = [w2i[x] for x in sentence]
-                        sentences_idx.append(curr_sentence_idx if len(curr_sentence_idx) > 0 else [w2i['<unk>']])
-
+                    ################ modified by Fiona Guo ################
+                    if self.params.bert_encoder:
+                        sentences_idx = bert_tokenizer(sentences,max_length=self.params.max_sent_len)
+                    else:
+                        sentences_idx = []
+                        for sentence in sentences:
+                            sentence = sentence.lower().strip().split(" ")
+                            curr_sentence_idx = [w2i[x] for x in sentence]
+                            sentences_idx.append(curr_sentence_idx if len(curr_sentence_idx) > 0 else [w2i['<unk>']])
+                    ################ modified by Fiona Guo ################
                     if len(sentences_idx) > 1 and len(sentences_idx) < 1000:
                         data.append((sentences_idx[:self.params.max_sents_in_a_doc], tag))
                         new_adj.append(adj[idx])
@@ -217,11 +245,14 @@ class DataLoader:
             tag = int(row[0])
             # Tag id is reversed in this dataset
             tag = tag + 1 if tag == 0 else tag - 1
-            sentences_idx = []
-            for sentence in sentences:
-                sentence = sentence.lower().replace("\n", " ").strip().split(" ")
-                curr_sentence_idx = [w2i[x] for x in sentence]
-                sentences_idx.append(curr_sentence_idx if len(curr_sentence_idx) > 0 else [w2i['<unk>']])
+            if self.params.bert_encoder:
+                sentences_idx = bert_tokenizer(sentences,max_length=self.params.max_sent_len)
+            else:
+                sentences_idx = []
+                for sentence in sentences:
+                    sentence = sentence.lower().replace("\n", " ").strip().split(" ")
+                    curr_sentence_idx = [w2i[x] for x in sentence]
+                    sentences_idx.append(curr_sentence_idx if len(curr_sentence_idx) > 0 else [w2i['<unk>']])
             if len(sentences_idx) > 1:
                 data.append((sentences_idx, tag))
                 new_adj.append(adj[count])
@@ -259,13 +290,24 @@ class DataSet(torch.utils.data.TensorDataset):
         self.feas = fea
         self.entity_description = entity_description
         self.num_of_samples = len(self.sents)
-        for i, a in enumerate(self.adjs):
-            assert a[0].shape[0] == len(self.sents[i]),\
-                "dim of adj does not match the num of sent, where the idx is {}".format(i)
-            assert a[4].shape[0] == len(self.feas[i][1]), \
-                "dim of adj does not match the num of entity, where the idx is {}".format(i)
-            assert a[7].shape[0] == len(self.feas[i][2]), \
-                "dim of adj does not match the num of topic, where the idx is {}".format(i)
+        ################ modified by Fiona Guo ################
+        if params.bert_encoder:
+            for i, a in enumerate(self.adjs):
+                assert a[0].shape[0] == len(self.sents[i][0]),\
+                    "dim of adj does not match the num of sent, where the idx is {}".format(i)
+                assert a[4].shape[0] == len(self.feas[i][1]), \
+                    "dim of adj does not match the num of entity, where the idx is {}".format(i)
+                assert a[7].shape[0] == len(self.feas[i][2]), \
+                    "dim of adj does not match the num of topic, where the idx is {}".format(i)
+        else:
+            for i, a in enumerate(self.adjs):
+                assert a[0].shape[0] == len(self.sents[i]),\
+                    "dim of adj does not match the num of sent, where the idx is {}".format(i)
+                assert a[4].shape[0] == len(self.feas[i][1]), \
+                    "dim of adj does not match the num of entity, where the idx is {}".format(i)
+                assert a[7].shape[0] == len(self.feas[i][2]), \
+                    "dim of adj does not match the num of topic, where the idx is {}".format(i)
+        ################ modified by Fiona Guo ################
 
     def __len__(self):
         return self.num_of_samples
@@ -275,15 +317,25 @@ class DataSet(torch.utils.data.TensorDataset):
 
     def collate(self, batch):
         sents, doc_lens_o, labels, adjs, feas = zip(*batch)
-        # concatenate & padding
-        doc_lens, curr_sents = [], []
-        for doc in sents:
-            doc_lens += [min(self.params.max_sent_len, len(x)) for x in doc]
-            curr_sents += doc
-        padded_sents = np.zeros((len(curr_sents), max(doc_lens)))
-        for i, sen in enumerate(curr_sents):
-            padded_sents[i, :len(sen)] = sen[:doc_lens[i]]
-        documents = torch.from_numpy(padded_sents).long()
+
+        ################ modified by Fiona Guo ################
+        if self.params.bert_encoder:
+            sent_id = torch.cat([i[0] for i in sents],dim=0)
+            mask = torch.cat([i[1] for i in sents],dim=0)
+            documents = (sent_id,mask)
+            doc_lens = None
+        else:
+            # concatenate & padding
+            doc_lens, curr_sents = [], []
+            for doc in sents:
+                doc_lens += [min(self.params.max_sent_len, len(x)) for x in doc]
+                curr_sents += doc
+            padded_sents = np.zeros((len(curr_sents), max(doc_lens)))
+            for i, sen in enumerate(curr_sents):
+                padded_sents[i, :len(sen)] = sen[:doc_lens[i]]
+            documents = torch.from_numpy(padded_sents).long()
+            doc_lens = torch.from_numpy(np.array(doc_lens)).int()
+        ################ modified by Fiona Guo ################
 
         new_feas, new_adjs = [], []
         fea_doc, fea_ent, fea_top = zip(*feas)
@@ -298,19 +350,29 @@ class DataSet(torch.utils.data.TensorDataset):
         entiPerDoc = torch.from_numpy(np.array([len(fea[1]) for fea in feas])).int()
         topiPerDoc = torch.from_numpy(np.array([len(fea[2]) for fea in feas])).int()
 
-        # concatenate & padding
-        ent_lens, curr_sents = [], []
-        for doc in fea_ent:
-            doc = [self.entity_description[doc[idx]] for idx in range(len(doc))]
-            ent_lens += [min(self.params.max_sent_len, len(x)) for x in doc]
-            curr_sents += doc
-        padded_sents = np.zeros((len(curr_sents), max(ent_lens)))
-        for i, sen in enumerate(curr_sents):
-            padded_sents[i, :len(sen)] = sen[:ent_lens[i]]
-        ent_desc = torch.from_numpy(padded_sents).long()
-
-        doc_lens = torch.from_numpy(np.array(doc_lens)).int()
-        ent_lens = torch.from_numpy(np.array(ent_lens)).int()
+        ################ modified by Fiona Guo ################
+        if self.params.bert_encoder:
+            curr_sents = []
+            for doc in fea_ent:
+                doc = [(self.entity_description[0][doc[idx]],self.entity_description[1][doc[idx]]) for idx in range(len(doc))]
+                curr_sents += doc
+            ent_sent_id = torch.t(torch.stack([i[0] for i in curr_sents],dim=1))
+            ent_mask = torch.t(torch.stack([i[1] for i in curr_sents],dim=1))
+            ent_desc = (ent_sent_id,ent_mask)
+            ent_lens = None
+        else:
+            # concatenate & padding
+            ent_lens, curr_sents = [], []
+            for doc in fea_ent:
+                doc = [self.entity_description[doc[idx]] for idx in range(len(doc))]
+                ent_lens += [min(self.params.max_sent_len, len(x)) for x in doc]
+                curr_sents += doc
+            padded_sents = np.zeros((len(curr_sents), max(ent_lens)))
+            for i, sen in enumerate(curr_sents):
+                padded_sents[i, :len(sen)] = sen[:ent_lens[i]]
+            ent_desc = torch.from_numpy(padded_sents).long()
+            ent_lens = torch.from_numpy(np.array(ent_lens)).int()
+        ################ modified by Fiona Guo ################
 
         if self.params.node_type == 3:
             new_adjs = [new_adjs[0:3], new_adjs[3:6], new_adjs[6:9]]
