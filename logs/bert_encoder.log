@@ -1,0 +1,453 @@
+{
+ "root": "./data/fakeNews/",
+ "train": "./data/fakeNews/fulltrain.csv",
+ "dev": "./data/fakeNews/balancedtest.csv",
+ "test": "./data/fakeNews/test.xlsx",
+ "pte": "",
+ "entity_desc": "./data/fakeNews/entityDescCorpus.pkl",
+ "entity_tran": "./data/fakeNews/entity_feature_transE.pkl",
+ "adjs": "./data/fakeNews/adjs/",
+ "emb_dim": 100,
+ "hidden_dim": 100,
+ "node_emb_dim": 32,
+ "max_epochs": 15,
+ "max_sent_len": 50,
+ "max_sents_in_a_doc": 10000,
+ "batch_size": 32,
+ "lr": 0.001,
+ "dropout": 0.5,
+ "ntags": 4,
+ "weight_decay": 1e-06,
+ "pooling": "max",
+ "model_file": "model_CompareNet_Max_DET_1209_0535.t7",
+ "plot": 0,
+ "mode": 0,
+ "cuda": true,
+ "device": 0,
+ "HALF": 1,
+ "DEBUG": false,
+ "node_type": 3,
+ "repeat": 5,
+ "seed": [
+   42,
+   91,
+   30,
+   72,
+   5
+ ],
+ "bert_encoder": 1,
+ "config": "CompareNet_Max_DET_1209_0535"
+}
+<class 'int'> 100
+Loading adj:  ./data/fakeNews/adjs//
+Loading ./data/fakeNews/adjs//train/
+Preprocessing ./data/fakeNews/adjs//train/
+removed_idx of ./data/fakeNews/fulltrain.csv: 0
+Average train document length: 2.0
+Maximum train document length: 2
+Loading ./data/fakeNews/adjs//test/
+Preprocessing ./data/fakeNews/adjs//test/
+removed_idx of ./data/fakeNews/test.xlsx: []
+Loading ./data/fakeNews/adjs//dev/
+Preprocessing ./data/fakeNews/adjs//dev/
+removed_idx of ./data/fakeNews/balancedtest.csv: 0
+PreCost: 0:05:53
+
+
+
+--------------------------- Repeat: 0 ---------------------------
+
+
+
+---------------------------  Seed: 42  ---------------------------
+-----------CompareNet_Max_DET_1209_0535-------------
+Epoch: 1, Train loss: 0.8755, Train acc: 0.8675, Dev loss: 0.8316, Dev acc: 0.9142
+Epoch: 2, Train loss: 0.8297, Train acc: 0.9129, Dev loss: 0.8212, Dev acc: 0.9207
+Epoch: 3, Train loss: 0.8167, Train acc: 0.9273, Dev loss: 0.8119, Dev acc: 0.9331
+Epoch: 4, Train loss: 0.8093, Train acc: 0.9334, Dev loss: 0.8114, Dev acc: 0.9327
+Epoch: 5, Train loss: 0.8041, Train acc: 0.9396, Dev loss: 0.8093, Dev acc: 0.9338
+Epoch: 6, Train loss: 0.8001, Train acc: 0.9429, Dev loss: 0.8028, Dev acc: 0.9422
+Epoch: 7, Train loss: 0.7972, Train acc: 0.9462, Dev loss: 0.8021, Dev acc: 0.9414
+Epoch: 8, Train loss: 0.7934, Train acc: 0.9499, Dev loss: 0.7995, Dev acc: 0.9451
+Epoch: 9, Train loss: 0.7910, Train acc: 0.9526, Dev loss: 0.7957, Dev acc: 0.9481
+Epoch: 10, Train loss: 0.7907, Train acc: 0.9527, Dev loss: 0.8014, Dev acc: 0.9417
+Dev accuracy did not increase, reducing the learning rate by 2!!!
+Epoch: 11, Train loss: 0.7870, Train acc: 0.9564, Dev loss: 0.7956, Dev acc: 0.9486
+Epoch: 12, Train loss: 0.7861, Train acc: 0.9569, Dev loss: 0.7948, Dev acc: 0.9499
+Epoch: 13, Train loss: 0.7850, Train acc: 0.9585, Dev loss: 0.7945, Dev acc: 0.9494
+Epoch: 14, Train loss: 0.7848, Train acc: 0.9590, Dev loss: 0.7941, Dev acc: 0.9495
+Epoch: 15, Train loss: 0.7845, Train acc: 0.9587, Dev loss: 0.7943, Dev acc: 0.9497
+Dev accuracy did not increase, reducing the learning rate by 2!!!
+-----------------------------------------
+{'data_loading': 353.17324841953814, 'CompareNet_Max_DET_1209_0535': 2719.7387510342523}
+Total time taken (in seconds): 3088.945953540504
+{
+ "root": "./data/fakeNews/",
+ "train": "./data/fakeNews/fulltrain.csv",
+ "dev": "./data/fakeNews/balancedtest.csv",
+ "test": "./data/fakeNews/test.xlsx",
+ "pte": "",
+ "entity_desc": "./data/fakeNews/entityDescCorpus.pkl",
+ "entity_tran": "./data/fakeNews/entity_feature_transE.pkl",
+ "adjs": "./data/fakeNews/adjs/",
+ "emb_dim": 100,
+ "hidden_dim": 100,
+ "node_emb_dim": 32,
+ "max_epochs": 15,
+ "max_sent_len": 50,
+ "max_sents_in_a_doc": 10000,
+ "batch_size": 32,
+ "lr": 0.001,
+ "dropout": 0.5,
+ "ntags": 4,
+ "weight_decay": 1e-06,
+ "pooling": "max",
+ "model_file": "model_CompareNet_Max_DET_1209_0535.t7",
+ "plot": 0,
+ "mode": 0,
+ "cuda": true,
+ "device": 0,
+ "HALF": 1,
+ "DEBUG": false,
+ "node_type": 3,
+ "repeat": 5,
+ "seed": [
+   42,
+   91,
+   30,
+   72,
+   5
+ ],
+ "bert_encoder": 1,
+ "config": "CompareNet_Max_DET_1209_0535"
+}
+Accuracy on the OOD test set 2: 0.6847
+Precision on the OOD test set 2 macro / micro: 0.6886, 0.6847
+Recall on the OOD test set 2 macro / micro: 0.6847, 0.6847
+F1 on the OOD test set 2 macro / micro: 0.6810, 0.6847
+Latex: 68.47 & 68.86 & 68.47 & 68.10
+----------------------------------------------------------------------
+Accuracy on the dev set: 0.9499
+Precision on the dev set macro / micro: 0.9467, 0.9499
+Recall on the dev macro / micro: 0.9464, 0.9499
+F1 on the dev macro / micro: 0.9464, 0.9499
+Latex: 94.99 & 94.67 & 94.64 & 94.64
+
+
+
+--------------------------- Repeat: 1 ---------------------------
+
+
+
+---------------------------  Seed: 91  ---------------------------
+-----------CompareNet_Max_DET_1209_0535-------------
+Epoch: 1, Train loss: 0.9785, Train acc: 0.7625, Dev loss: 0.9515, Dev acc: 0.7890
+Epoch: 2, Train loss: 0.9437, Train acc: 0.7982, Dev loss: 0.9419, Dev acc: 0.7981
+Epoch: 3, Train loss: 0.9353, Train acc: 0.8057, Dev loss: 0.9338, Dev acc: 0.8063
+Epoch: 4, Train loss: 0.9315, Train acc: 0.8100, Dev loss: 0.9287, Dev acc: 0.8103
+Epoch: 5, Train loss: 0.9258, Train acc: 0.8160, Dev loss: 0.9270, Dev acc: 0.8127
+Epoch: 6, Train loss: 0.9239, Train acc: 0.8174, Dev loss: 0.9251, Dev acc: 0.8151
+Epoch: 7, Train loss: 0.9207, Train acc: 0.8205, Dev loss: 0.9212, Dev acc: 0.8175
+Epoch: 8, Train loss: 0.9194, Train acc: 0.8215, Dev loss: 0.9181, Dev acc: 0.8197
+Epoch: 9, Train loss: 0.8214, Train acc: 0.9224, Dev loss: 0.8137, Dev acc: 0.9319
+Epoch: 10, Train loss: 0.8037, Train acc: 0.9396, Dev loss: 0.8079, Dev acc: 0.9364
+Epoch: 11, Train loss: 0.7981, Train acc: 0.9452, Dev loss: 0.8048, Dev acc: 0.9391
+Epoch: 12, Train loss: 0.7965, Train acc: 0.9462, Dev loss: 0.7983, Dev acc: 0.9459
+Epoch: 13, Train loss: 0.7935, Train acc: 0.9501, Dev loss: 0.7980, Dev acc: 0.9455
+Epoch: 14, Train loss: 0.7906, Train acc: 0.9526, Dev loss: 0.7989, Dev acc: 0.9445
+Epoch: 15, Train loss: 0.7897, Train acc: 0.9539, Dev loss: 0.7983, Dev acc: 0.9453
+Dev accuracy did not increase, reducing the learning rate by 2!!!
+-----------------------------------------
+{'data_loading': 3117.947858531028, 'CompareNet_Max_DET_1209_0535': 2629.184741535224}
+Total time taken (in seconds): 5747.802508059889
+{
+ "root": "./data/fakeNews/",
+ "train": "./data/fakeNews/fulltrain.csv",
+ "dev": "./data/fakeNews/balancedtest.csv",
+ "test": "./data/fakeNews/test.xlsx",
+ "pte": "",
+ "entity_desc": "./data/fakeNews/entityDescCorpus.pkl",
+ "entity_tran": "./data/fakeNews/entity_feature_transE.pkl",
+ "adjs": "./data/fakeNews/adjs/",
+ "emb_dim": 100,
+ "hidden_dim": 100,
+ "node_emb_dim": 32,
+ "max_epochs": 15,
+ "max_sent_len": 50,
+ "max_sents_in_a_doc": 10000,
+ "batch_size": 32,
+ "lr": 0.001,
+ "dropout": 0.5,
+ "ntags": 4,
+ "weight_decay": 1e-06,
+ "pooling": "max",
+ "model_file": "model_CompareNet_Max_DET_1209_0535.t7",
+ "plot": 0,
+ "mode": 0,
+ "cuda": true,
+ "device": 0,
+ "HALF": 1,
+ "DEBUG": false,
+ "node_type": 3,
+ "repeat": 5,
+ "seed": [
+   42,
+   91,
+   30,
+   72,
+   5
+ ],
+ "bert_encoder": 1,
+ "config": "CompareNet_Max_DET_1209_0535"
+}
+Accuracy on the OOD test set 2: 0.7010
+Precision on the OOD test set 2 macro / micro: 0.7082, 0.7010
+Recall on the OOD test set 2 macro / micro: 0.7010, 0.7010
+F1 on the OOD test set 2 macro / micro: 0.6949, 0.7010
+Latex: 70.10 & 70.82 & 70.10 & 69.49
+----------------------------------------------------------------------
+Accuracy on the dev set: 0.9459
+Precision on the dev set macro / micro: 0.9437, 0.9459
+Recall on the dev macro / micro: 0.9386, 0.9459
+F1 on the dev macro / micro: 0.9411, 0.9459
+Latex: 94.59 & 94.37 & 93.86 & 94.11
+
+
+
+--------------------------- Repeat: 2 ---------------------------
+
+
+
+---------------------------  Seed: 30  ---------------------------
+-----------CompareNet_Max_DET_1209_0535-------------
+Epoch: 1, Train loss: 0.9836, Train acc: 0.7571, Dev loss: 0.9480, Dev acc: 0.7936
+Epoch: 2, Train loss: 0.9451, Train acc: 0.7967, Dev loss: 0.9368, Dev acc: 0.8040
+Epoch: 3, Train loss: 0.9359, Train acc: 0.8057, Dev loss: 0.9273, Dev acc: 0.8139
+Epoch: 4, Train loss: 0.9280, Train acc: 0.8133, Dev loss: 0.9286, Dev acc: 0.8121
+Epoch: 5, Train loss: 0.9247, Train acc: 0.8168, Dev loss: 0.9238, Dev acc: 0.8171
+Epoch: 6, Train loss: 0.9230, Train acc: 0.8183, Dev loss: 0.9231, Dev acc: 0.8178
+Epoch: 7, Train loss: 0.9209, Train acc: 0.8205, Dev loss: 0.9185, Dev acc: 0.8220
+Epoch: 8, Train loss: 0.9184, Train acc: 0.8231, Dev loss: 0.9164, Dev acc: 0.8253
+Epoch: 9, Train loss: 0.9169, Train acc: 0.8248, Dev loss: 0.9167, Dev acc: 0.8227
+Epoch: 10, Train loss: 0.9157, Train acc: 0.8253, Dev loss: 0.9149, Dev acc: 0.8256
+Epoch: 11, Train loss: 0.9133, Train acc: 0.8280, Dev loss: 0.9145, Dev acc: 0.8253
+Dev accuracy did not increase, reducing the learning rate by 2!!!
+Epoch: 12, Train loss: 0.9118, Train acc: 0.8296, Dev loss: 0.9143, Dev acc: 0.8261
+Epoch: 13, Train loss: 0.9116, Train acc: 0.8290, Dev loss: 0.9132, Dev acc: 0.8263
+Epoch: 14, Train loss: 0.9102, Train acc: 0.8310, Dev loss: 0.9134, Dev acc: 0.8261
+Epoch: 15, Train loss: 0.9095, Train acc: 0.8315, Dev loss: 0.9139, Dev acc: 0.8254
+-----------------------------------------
+{'data_loading': 5776.428229235113, 'CompareNet_Max_DET_1209_0535': 2696.566834301688}
+Total time taken (in seconds): 8473.674130189233
+{
+ "root": "./data/fakeNews/",
+ "train": "./data/fakeNews/fulltrain.csv",
+ "dev": "./data/fakeNews/balancedtest.csv",
+ "test": "./data/fakeNews/test.xlsx",
+ "pte": "",
+ "entity_desc": "./data/fakeNews/entityDescCorpus.pkl",
+ "entity_tran": "./data/fakeNews/entity_feature_transE.pkl",
+ "adjs": "./data/fakeNews/adjs/",
+ "emb_dim": 100,
+ "hidden_dim": 100,
+ "node_emb_dim": 32,
+ "max_epochs": 15,
+ "max_sent_len": 50,
+ "max_sents_in_a_doc": 10000,
+ "batch_size": 32,
+ "lr": 0.001,
+ "dropout": 0.5,
+ "ntags": 4,
+ "weight_decay": 1e-06,
+ "pooling": "max",
+ "model_file": "model_CompareNet_Max_DET_1209_0535.t7",
+ "plot": 0,
+ "mode": 0,
+ "cuda": true,
+ "device": 0,
+ "HALF": 1,
+ "DEBUG": false,
+ "node_type": 3,
+ "repeat": 5,
+ "seed": [
+   42,
+   91,
+   30,
+   72,
+   5
+ ],
+ "bert_encoder": 1,
+ "config": "CompareNet_Max_DET_1209_0535"
+}
+Accuracy on the OOD test set 2: 0.6130
+Precision on the OOD test set 2 macro / micro: 0.4790, 0.6130
+Recall on the OOD test set 2 macro / micro: 0.6130, 0.6130
+F1 on the OOD test set 2 macro / micro: 0.5329, 0.6130
+Latex: 61.30 & 47.90 & 61.30 & 53.29
+----------------------------------------------------------------------
+Accuracy on the dev set: 0.8263
+Precision on the dev set macro / micro: 0.6177, 0.8263
+Recall on the dev macro / micro: 0.7170, 0.8263
+F1 on the dev macro / micro: 0.6637, 0.8263
+Latex: 82.63 & 61.77 & 71.70 & 66.37
+
+
+
+--------------------------- Repeat: 3 ---------------------------
+
+
+
+---------------------------  Seed: 72  ---------------------------
+-----------CompareNet_Max_DET_1209_0535-------------
+Epoch: 1, Train loss: 0.9855, Train acc: 0.7560, Dev loss: 0.9454, Dev acc: 0.7953
+Epoch: 2, Train loss: 0.9499, Train acc: 0.7916, Dev loss: 0.9386, Dev acc: 0.8026
+Epoch: 3, Train loss: 0.9394, Train acc: 0.8017, Dev loss: 0.9310, Dev acc: 0.8109
+Epoch: 4, Train loss: 0.9321, Train acc: 0.8097, Dev loss: 0.9289, Dev acc: 0.8108
+Epoch: 5, Train loss: 0.9279, Train acc: 0.8134, Dev loss: 0.9266, Dev acc: 0.8143
+Epoch: 6, Train loss: 0.9246, Train acc: 0.8170, Dev loss: 0.9229, Dev acc: 0.8168
+Epoch: 7, Train loss: 0.9222, Train acc: 0.8190, Dev loss: 0.9215, Dev acc: 0.8187
+Epoch: 8, Train loss: 0.9183, Train acc: 0.8220, Dev loss: 0.9198, Dev acc: 0.8201
+Epoch: 9, Train loss: 0.9170, Train acc: 0.8229, Dev loss: 0.9181, Dev acc: 0.8192
+Epoch: 10, Train loss: 0.9143, Train acc: 0.8250, Dev loss: 0.9161, Dev acc: 0.8227
+Epoch: 11, Train loss: 0.8863, Train acc: 0.8533, Dev loss: 0.8113, Dev acc: 0.9360
+Epoch: 12, Train loss: 0.8016, Train acc: 0.9414, Dev loss: 0.8001, Dev acc: 0.9458
+Epoch: 13, Train loss: 0.7974, Train acc: 0.9459, Dev loss: 0.7985, Dev acc: 0.9469
+Epoch: 14, Train loss: 0.7926, Train acc: 0.9512, Dev loss: 0.7959, Dev acc: 0.9491
+Epoch: 15, Train loss: 0.7914, Train acc: 0.9518, Dev loss: 0.7978, Dev acc: 0.9472
+Dev accuracy did not increase, reducing the learning rate by 2!!!
+-----------------------------------------
+{'data_loading': 8503.0569896698, 'CompareNet_Max_DET_1209_0535': 2811.3285248726606}
+Total time taken (in seconds): 11315.07366732601
+{
+ "root": "./data/fakeNews/",
+ "train": "./data/fakeNews/fulltrain.csv",
+ "dev": "./data/fakeNews/balancedtest.csv",
+ "test": "./data/fakeNews/test.xlsx",
+ "pte": "",
+ "entity_desc": "./data/fakeNews/entityDescCorpus.pkl",
+ "entity_tran": "./data/fakeNews/entity_feature_transE.pkl",
+ "adjs": "./data/fakeNews/adjs/",
+ "emb_dim": 100,
+ "hidden_dim": 100,
+ "node_emb_dim": 32,
+ "max_epochs": 15,
+ "max_sent_len": 50,
+ "max_sents_in_a_doc": 10000,
+ "batch_size": 32,
+ "lr": 0.001,
+ "dropout": 0.5,
+ "ntags": 4,
+ "weight_decay": 1e-06,
+ "pooling": "max",
+ "model_file": "model_CompareNet_Max_DET_1209_0535.t7",
+ "plot": 0,
+ "mode": 0,
+ "cuda": true,
+ "device": 0,
+ "HALF": 1,
+ "DEBUG": false,
+ "node_type": 3,
+ "repeat": 5,
+ "seed": [
+   42,
+   91,
+   30,
+   72,
+   5
+ ],
+ "bert_encoder": 1,
+ "config": "CompareNet_Max_DET_1209_0535"
+}
+Accuracy on the OOD test set 2: 0.6840
+Precision on the OOD test set 2 macro / micro: 0.6891, 0.6840
+Recall on the OOD test set 2 macro / micro: 0.6840, 0.6840
+F1 on the OOD test set 2 macro / micro: 0.6820, 0.6840
+Latex: 68.40 & 68.91 & 68.40 & 68.20
+----------------------------------------------------------------------
+Accuracy on the dev set: 0.9491
+Precision on the dev set macro / micro: 0.9443, 0.9491
+Recall on the dev macro / micro: 0.9446, 0.9491
+F1 on the dev macro / micro: 0.9443, 0.9491
+Latex: 94.91 & 94.43 & 94.46 & 94.43
+
+
+
+--------------------------- Repeat: 4 ---------------------------
+
+
+
+---------------------------  Seed: 5  ---------------------------
+-----------CompareNet_Max_DET_1209_0535-------------
+Epoch: 1, Train loss: 0.8823, Train acc: 0.8603, Dev loss: 0.8239, Dev acc: 0.9252
+Epoch: 2, Train loss: 0.8203, Train acc: 0.9230, Dev loss: 0.8102, Dev acc: 0.9363
+Epoch: 3, Train loss: 0.8106, Train acc: 0.9331, Dev loss: 0.8058, Dev acc: 0.9413
+Epoch: 4, Train loss: 0.8043, Train acc: 0.9390, Dev loss: 0.8007, Dev acc: 0.9462
+Epoch: 5, Train loss: 0.7980, Train acc: 0.9461, Dev loss: 0.7984, Dev acc: 0.9470
+Epoch: 6, Train loss: 0.7971, Train acc: 0.9464, Dev loss: 0.7949, Dev acc: 0.9504
+Epoch: 7, Train loss: 0.7951, Train acc: 0.9484, Dev loss: 0.7952, Dev acc: 0.9493
+Epoch: 8, Train loss: 0.7913, Train acc: 0.9523, Dev loss: 0.7935, Dev acc: 0.9516
+Epoch: 9, Train loss: 0.7886, Train acc: 0.9549, Dev loss: 0.7931, Dev acc: 0.9506
+Epoch: 10, Train loss: 0.7887, Train acc: 0.9546, Dev loss: 0.7944, Dev acc: 0.9492
+Dev accuracy did not increase, reducing the learning rate by 2!!!
+Epoch: 11, Train loss: 0.7877, Train acc: 0.9557, Dev loss: 0.7914, Dev acc: 0.9521
+Epoch: 12, Train loss: 0.7858, Train acc: 0.9577, Dev loss: 0.7892, Dev acc: 0.9553
+Epoch: 13, Train loss: 0.7851, Train acc: 0.9585, Dev loss: 0.7891, Dev acc: 0.9559
+Epoch: 14, Train loss: 0.7833, Train acc: 0.9605, Dev loss: 0.7890, Dev acc: 0.9557
+Epoch: 15, Train loss: 0.7825, Train acc: 0.9615, Dev loss: 0.7884, Dev acc: 0.9554
+-----------------------------------------
+{'data_loading': 11345.714891488664, 'CompareNet_Max_DET_1209_0535': 2746.1564448839054}
+Total time taken (in seconds): 14092.537120875902
+{
+ "root": "./data/fakeNews/",
+ "train": "./data/fakeNews/fulltrain.csv",
+ "dev": "./data/fakeNews/balancedtest.csv",
+ "test": "./data/fakeNews/test.xlsx",
+ "pte": "",
+ "entity_desc": "./data/fakeNews/entityDescCorpus.pkl",
+ "entity_tran": "./data/fakeNews/entity_feature_transE.pkl",
+ "adjs": "./data/fakeNews/adjs/",
+ "emb_dim": 100,
+ "hidden_dim": 100,
+ "node_emb_dim": 32,
+ "max_epochs": 15,
+ "max_sent_len": 50,
+ "max_sents_in_a_doc": 10000,
+ "batch_size": 32,
+ "lr": 0.001,
+ "dropout": 0.5,
+ "ntags": 4,
+ "weight_decay": 1e-06,
+ "pooling": "max",
+ "model_file": "model_CompareNet_Max_DET_1209_0535.t7",
+ "plot": 0,
+ "mode": 0,
+ "cuda": true,
+ "device": 0,
+ "HALF": 1,
+ "DEBUG": false,
+ "node_type": 3,
+ "repeat": 5,
+ "seed": [
+   42,
+   91,
+   30,
+   72,
+   5
+ ],
+ "bert_encoder": 1,
+ "config": "CompareNet_Max_DET_1209_0535"
+}
+Accuracy on the OOD test set 2: 0.6640
+Precision on the OOD test set 2 macro / micro: 0.6786, 0.6640
+Recall on the OOD test set 2 macro / micro: 0.6640, 0.6640
+F1 on the OOD test set 2 macro / micro: 0.6523, 0.6640
+Latex: 66.40 & 67.86 & 66.40 & 65.23
+----------------------------------------------------------------------
+Accuracy on the dev set: 0.9559
+Precision on the dev set macro / micro: 0.9550, 0.9559
+Recall on the dev macro / micro: 0.9516, 0.9559
+F1 on the dev macro / micro: 0.9532, 0.9559
+Latex: 95.59 & 95.50 & 95.16 & 95.32
+
+
+Total train + test time was 14141 seconds.
