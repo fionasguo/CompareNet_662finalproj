@@ -86,6 +86,7 @@ class TextEncoder(Module):
     def forward(self, embeds, seq_lens):
         return self.lstm(embeds, seq_lens)
 
+
 class EntityEncoder(Module):
     def __init__(self, params):
         super(EntityEncoder, self).__init__()
@@ -95,6 +96,27 @@ class EntityEncoder(Module):
     def forward(self, embeds, seq_lens, Y):
         X = self.lstm(embeds, seq_lens)
         return self.gating(X, Y)
+
+################ added by Fiona Guo ################
+class BertTextEncoder(Module):
+    def __init__(self, params):
+        super(BertTextEncoder, self).__init__()
+
+        self.sent_bert = BertEncoder(params.hidden_dim)
+
+    def forward(self, sent_id, mask):
+        return self.sent_bert(sent_id, mask)
+
+class BertEntityEncoder(Module):
+    def __init__(self, params):
+        super(BertEntityEncoder, self).__init__()
+        self.sent_bert = BertEncoder(params.hidden_dim)
+        self.gating = GatingMechanism(params)
+
+    def forward(self, sent_id, mask, Y):
+        X = self.sent_bert(sent_id, mask)
+        return self.gating(X, Y)
+################ added by Fiona Guo ################
 
 class Pooling(nn.Module):
     def __init__(self, params):
@@ -198,6 +220,8 @@ class GatingMechanism(nn.Module):
         '''
         gate = torch.sigmoid(self.gate_theta[Y])
         Y = self.enti_tran(Y)
+        # the output is 100, pad to hidden_dim
+        # Y = torch.cat((Y,torch.zeros((Y.shape[0],gate.shape[1]-Y.shape[1])).cuda()),1).half()
         output = torch.mul(gate, X) + torch.mul(-gate + 1, Y)
         return output
 

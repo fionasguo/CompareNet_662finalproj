@@ -4,7 +4,7 @@ from torch.nn.parameter import Parameter
 from torch.nn.modules.module import Module
 import torch.nn.functional as F
 from torch import nn
-
+from transformers import AutoTokenizer, AutoModel
 
 class GraphConvolution(Module):
     def __init__(self, in_features, out_features, bias=True):
@@ -88,7 +88,7 @@ class GraphAttentionConvolution(Module):
             self.bias.data.uniform_(-stdv, stdv)
         else:
             self.register_parameter('bias', None)
-        
+
         self.att_list: nn.ModuleList = nn.ModuleList()
         for i in range(self.ntype):
             self.att_list.append( Attention_InfLevel(out_features, gamma) )
@@ -114,7 +114,7 @@ class GraphAttentionConvolution(Module):
                 else:
                     x_t1.append( self.att_list[t1](h[t1], h[t2], adj_list[t1][t2]) )
             outputs.append(x_t1)
-            
+
         return outputs
 
 class Attention_InfLevel(nn.Module):
@@ -125,12 +125,12 @@ class Attention_InfLevel(nn.Module):
         self.a1 = nn.Parameter(torch.zeros(size=(dim_features, 1)))
         self.a2 = nn.Parameter(torch.zeros(size=(dim_features, 1)))
         nn.init.xavier_normal_(self.a1.data, gain=1.414)
-        nn.init.xavier_normal_(self.a2.data, gain=1.414)        
+        nn.init.xavier_normal_(self.a2.data, gain=1.414)
 
         self.leakyrelu = nn.LeakyReLU(0.2, )
         self.gamma = gamma
 
-    
+
     def forward(self, input1, input2, adj):
         # adj = adj.coalesce()
         h = input1
@@ -140,7 +140,7 @@ class Attention_InfLevel(nn.Module):
 
         e1 = torch.matmul(h, self.a1).repeat(1, M)
         e2 = torch.matmul(g, self.a2).repeat(1, N).t()
-        e = e1 + e2  
+        e = e1 + e2
         e = self.leakyrelu(e)
         a = adj.to_dense()
         zero_vec = -9e15 * torch.ones_like(e)
@@ -153,26 +153,34 @@ class Attention_InfLevel(nn.Module):
         h_prime = torch.matmul(attention, g)
         return h_prime
 
+################ added by Fiona Guo ################
+class BertEncoder(Module):
+    def __init__(self,hidden_dimension, model_name='sentence-transformers/all-MiniLM-L6-v2'):
+        super(BertEncoder, self).__init__()
+        self.hidden_dim = hidden_dimension
+        self.sent_bert = AutoModel.from_pretrained(model_name,local_files_only=True)
+        self.linear = torch.nn.Linear(384,hidden_dimension) # reshape from the dim of output from sentence-bert to hidden dim required
 
-# class BertEncoder(Module):
-#     def __init__(self, hidden_dimension, embedding_dimension):
-#         super(BertEncoder, self).__init__()
-#         self.hidden_dim = hidden_dimension
-#         self.lstm = nn.LSTM(embedding_dimension, hidden_dimension, batch_first=True)
-#
-#     def forward(self, embeds, seq_lens):
-#         _, idx_sort = torch.sort(seq_lens, dim=0, descending=True)
-#         _, idx_unsort = torch.sort(idx_sort, dim=0)
-#         lens = list(seq_lens[idx_sort])
-#         selected_dim = 0
-#         x = embeds.index_select(selected_dim, idx_sort)
-#         rnn_input = nn.utils.rnn.pack_padded_sequence(x, lens, batch_first=True)
-#         rnn_output, (ht, ct) = self.lstm(rnn_input)
-#         ht = ht[-1].index_select(selected_dim, idx_unsort)
-#         # ct = ct[-1].index_select(selected_dim, idx_unsort)
-#         return ht  # bs * hidden_dim
+    def forward(self, sent_ids, sent_mask):
+        with torch.no_grad():
+            sent_output = self.sent_bert(input_ids=sent_ids, attention_mask=sent_mask)
+        sentence_embeddings = self.mean_pooling(sent_output, sent_mask).half()
+        # sentence_embeddings = F.normalize(sentence_embeddings,p=2,dim=1)
+        # print(sentence_embeddings.shape)
+        sentence_embeddings = self.linear(sentence_embeddings)
 
-        
+        return sentence_embeddings # num dataponts * hidden_dim
+
+    def mean_pooling(self,model_output, attention_mask):
+        # https://www.sbert.net/examples/applications/computing-embeddings/README.html#sentence-embeddings-with-transformers
+        token_embeddings = model_output[0] #First element of model_output contains all token embeddings
+        input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+        sum_embeddings = torch.sum(token_embeddings * input_mask_expanded, 1)
+        sum_mask = torch.clamp(input_mask_expanded.sum(1), min=1e-9)
+        return sum_embeddings / sum_mask
+################ added by Fiona Guo ################
+
+
 class LstmEncoder(Module):
     def __init__(self, hidden_dimension, embedding_dimension):
         super(LstmEncoder, self).__init__()
@@ -210,4 +218,3 @@ class AttentionPooling(nn.Module):
         a = self.a(a)         # D * 1
         a = torch.softmax(a, dim=dim)
         return torch.matmul(a.t(), X)
-

@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.parameter import Parameter
 from functools import reduce
-from models.model import HGAT, TextEncoder, EntityEncoder, Pooling, MatchingTransform, GatingMechanism
+from models.model import HGAT, TextEncoder, EntityEncoder, Pooling, MatchingTransform, GatingMechanism, BertTextEncoder, BertEntityEncoder
 import pickle as pkl
 
 class Classifier(nn.Module):
@@ -30,6 +30,11 @@ class Classifier(nn.Module):
             nn.init.xavier_uniform_(self.word_embeddings.weight)
         else:
             self.word_embeddings.weight.data.copy_(torch.from_numpy(pte))
+        ################ added by Fiona Guo ################
+        if params.bert_encoder:
+            self.bert_text_encoder = BertTextEncoder(params)
+            self.bert_enti_encoder = BertEntityEncoder(params)
+        ################ added by Fiona Guo ################
         # KB Field
 
         # with open(self.params.entity_tran, 'rb') as f:
@@ -49,13 +54,26 @@ class Classifier(nn.Module):
     # def forward(self, x_list, adj_list, sentPerDoc, entPerDoc=None):
     def forward(self, documents, ent_desc, doc_lens, ent_lens, adj_lists, feature_lists, sentPerDoc, entiPerDoc=None):
         x_list = []
-        embeds_docu = self.word_embeddings(documents)   # sents * max_seq_len * emb
-        d = self.text_encoder(embeds_docu, doc_lens)    # sents * max_seq_len * hidden
+        ################ modified by Fiona Guo ################
+        if self.params.bert_encoder:
+            sent_id,sent_mask = documents
+            d = self.bert_text_encoder(sent_id,sent_mask)
+        else:
+            embeds_docu = self.word_embeddings(documents)   # sents * max_seq_len * emb
+            d = self.text_encoder(embeds_docu, doc_lens)    # sents * max_seq_len * hidden
+        ################ modified by Fiona Guo ################
         d = self.dropout(F.relu_(d))                     # Relu activation and dropout
         x_list.append(d)
+
         if self.params.node_type == 3 or self.params.node_type == 2:
-            embeds_enti = self.word_embeddings(ent_desc)    # sents * max_seq_len * emb
-            e = self.enti_encoder(embeds_enti, ent_lens, feature_lists[1])    # sents * max_seq_len * hidden
+            ################ modified by Fiona Guo ################
+            if self.params.bert_encoder:
+                enti_sent_id,enti_mask = ent_desc
+                e = self.bert_enti_encoder(enti_sent_id,enti_mask,feature_lists[1])
+            else:
+                embeds_enti = self.word_embeddings(ent_desc)    # sents * max_seq_len * emb
+                e = self.enti_encoder(embeds_enti, ent_lens, feature_lists[1])    # sents * max_seq_len * hidden
+            ################ modified by Fiona Guo ################
             e = self.dropout(F.relu_(e))                     # Relu activation and dropout
             x_list.append(e)
         if self.params.node_type == 3 or self.params.node_type == 1:
