@@ -10,9 +10,11 @@ from sklearn.model_selection import train_test_split
 from nltk import sent_tokenize, word_tokenize
 from multiprocessing import Pool as ProcessPool
 
+############### Modified by Fiona Guo #################
 from transformers import AutoTokenizer, AutoModel
 sentence_model = 'sentence-transformers/all-MiniLM-L6-v2'
 bert_tokenizer = AutoTokenizer.from_pretrained(sentence_model,local_files_only=True)
+############### Modified by Fiona Guo #################
 
 ASYMMETRIC = True
 DEBUG_NUM = 400
