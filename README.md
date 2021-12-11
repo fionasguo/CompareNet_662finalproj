@@ -67,6 +67,6 @@ The following are all experiments we ran:
 
 ## Results
 
-The logs of all experiments are in the log foler. 
+The logs of all experiments are in the logs foler. 
 
 The result_summary.xlsx is a spread sheet with all final scores aggregated.
