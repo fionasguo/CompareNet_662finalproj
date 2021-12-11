@@ -46,6 +46,8 @@ nltk
 
 ## Run
 
+Preprocessing of data is automatically included in main.py.
+
 To train and test,
 ```
 python main.py --mode 0
