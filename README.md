@@ -18,3 +18,11 @@ models/layers.py - this file includes layers in the NN, we add the BERT encoder 
 
 ## Run Command
 python main.py --mode 0 --bert_encoder 1
+
+## Result
+
+We tested the improved model for the in-domain 4-way classification task, with different seeds.
+
+The results show that using sentence-BERT significantly improves the model.
+
+see file bert_encoder.log for recorded F1 scores of each repeat.
