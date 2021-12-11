@@ -69,7 +69,7 @@ def parse_arguments():
                              '1 represents two types: Document&Topic; \n'
                              '0 represents only one type: Document. ')
     parser.add_argument('-r', "--repeat", type=int, default=1, help='')
-    parser.add_argument('-s', "--seed", type=list, default=[5], help='')
+    parser.add_argument('-s', "--seed", nargs='+', type=int, default=[5], help='command line pass in example: -s 1 2 3')
 
     for dir in ["models/", "ckpt/", "plots/", "result/", "log/"]:
         if not os.path.exists(dir):   os.makedirs(dir)
