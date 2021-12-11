@@ -4,7 +4,7 @@ Additional Experiments in the reproducibility work of the paper Compare to The K
 
 In the original paper, the news text (TextEncoder) and entity description (EntityEncoder) encoder uses LSTM for representation learning. We replace it with pretrained sentence-BERT.
 
-## the following files have modifications made by us. 
+## The following files have modifications made by us:
 
 (The modifications are boxed and labeled by "Modified by Fiona Guo")
 
