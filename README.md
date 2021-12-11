@@ -17,7 +17,22 @@ models/model.py - this file includes major modules in the model. We change the t
 models/layers.py - this file includes layers in the NN, we add the BERT encoder here.
 
 ## Run Command
-python main.py --mode 0 --bert_encoder 1
+Dependency: except for the dependencies descripted in master branch, you need to install the transformers package in python3
+
+We use the model 'sentence-transformers/all-MiniLM-L6-v2'. If you are running on a computing node without internet connection, please first download the pretrained model with following lines in python3:
+
+    from transformers import AutoTokenizer, AutoModel
+
+    model_name = 'sentence-transformers/all-MiniLM-L6-v2'
+
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+    model = AutoModel.from_pretrained(model_name)
+
+
+Then run with the command: 
+
+    python main.py --mode 0 --bert_encoder 1
 
 ## Result
 
