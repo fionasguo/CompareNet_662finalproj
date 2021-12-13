@@ -70,6 +70,7 @@ def parse_arguments():
                              '0 represents only one type: Document. ')
     parser.add_argument('-r', "--repeat", type=int, default=1, help='')
     parser.add_argument('-s', "--seed", nargs='+', type=int, default=[5], help='command line pass in example: -s 1 2 3')
+    parser.add_argument("--gru_encoder", type=int, default=2, help='whether to use gru for encoding docs and entity descriptions. Default=2')
 
     for dir in ["models/", "ckpt/", "plots/", "result/", "log/"]:
         if not os.path.exists(dir):   os.makedirs(dir)
