@@ -172,7 +172,27 @@ class Attention_InfLevel(nn.Module):
 #         # ct = ct[-1].index_select(selected_dim, idx_unsort)
 #         return ht  # bs * hidden_dim
 
-        
+##################GruEncoder#################################
+class GruEncoder(Module):
+    def __init__(self, hidden_dimension, embedding_dimension):
+        super(GruEncoder, self).__init__()
+        self.hidden_dim = hidden_dimension
+        self.gru = nn.GRU(embedding_dimension, hidden_dimension, batch_first=True) # n_layers=5)
+
+    def forward(self, embeds, seq_lens):
+        _, idx_sort = torch.sort(seq_lens, dim=0, descending=True)
+        _, idx_unsort = torch.sort(idx_sort, dim=0)
+        lens = list(seq_lens[idx_sort])
+        selected_dim = 0
+        x = embeds.index_select(selected_dim, idx_sort)
+        rnn_input = nn.utils.rnn.pack_padded_sequence(x, lens, batch_first=True)
+        #rnn_output, (ht, ct) = self.gru(rnn_input)
+        rnn_output, ht = self.gru(rnn_input) #, ht.detach())
+        ht = ht[-1].index_select(selected_dim, idx_unsort)
+        # ct = ct[-1].index_select(selected_dim, idx_unsort)
+
+        return ht  # bs * hidden_dim
+            
 class LstmEncoder(Module):
     def __init__(self, hidden_dimension, embedding_dimension):
         super(LstmEncoder, self).__init__()
