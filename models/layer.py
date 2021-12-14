@@ -172,7 +172,7 @@ class Attention_InfLevel(nn.Module):
 #         # ct = ct[-1].index_select(selected_dim, idx_unsort)
 #         return ht  # bs * hidden_dim
 
-##################GruEncoder#################################
+################## GruEncoder. by Liqiu Yang #################################
 class GruEncoder(Module):
     def __init__(self, hidden_dimension, embedding_dimension):
         super(GruEncoder, self).__init__()
