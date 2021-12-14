@@ -76,7 +76,7 @@ class HGAT(nn.Module):
     def inference(self, x_list, adj_list, adj_all = None):
         return self.forward(x_list, adj_list, adj_all)
 
-
+#################### modified for gru by Liqiu Yang #########################
 class TextEncoder(Module):
     def __init__(self, params):
         super(TextEncoder, self).__init__()
@@ -95,7 +95,10 @@ class EntityEncoder(Module):
     def forward(self, embeds, seq_lens, Y):
         X = self.Encoder(embeds, seq_lens)
         return self.gating(X, Y)
-
+    
+#################### modified for gru by Liqiu Yang end#########################
+    
+    
 class Pooling(nn.Module):
     def __init__(self, params):
         super(Pooling, self).__init__()
