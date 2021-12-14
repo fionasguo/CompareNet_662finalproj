@@ -2,6 +2,11 @@
 
 We reproduced the ACL 2021 paper "[Compare to The Knowledge: Graph Neural Fake News Detection with External Knowledge](https://aclanthology.org/2021.acl-long.62/)"
 
+
+## This branch is for replacing LSTM to be GRU for the encoder. 
+
+
+
 ## Data
 
 raw_data.zip: https://github.com/BUPT-GAMMA/CompareNet_FakeNewsDetection/releases/tag/dataset
