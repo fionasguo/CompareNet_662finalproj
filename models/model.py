@@ -81,19 +81,19 @@ class TextEncoder(Module):
     def __init__(self, params):
         super(TextEncoder, self).__init__()
 
-        self.lstm = LstmEncoder(params.hidden_dim, params.emb_dim)
+        self.Encoder = GruEncoder(params.hidden_dim, params.emb_dim)
 
     def forward(self, embeds, seq_lens):
-        return self.lstm(embeds, seq_lens)
+        return self.Encoder(embeds, seq_lens)
 
 class EntityEncoder(Module):
     def __init__(self, params):
         super(EntityEncoder, self).__init__()
-        self.lstm = LstmEncoder(params.hidden_dim, params.emb_dim)
+        self.Encoder = GruEncoder(params.hidden_dim, params.emb_dim)
         self.gating = GatingMechanism(params)
 
     def forward(self, embeds, seq_lens, Y):
-        X = self.lstm(embeds, seq_lens)
+        X = self.Encoder(embeds, seq_lens)
         return self.gating(X, Y)
 
 class Pooling(nn.Module):
